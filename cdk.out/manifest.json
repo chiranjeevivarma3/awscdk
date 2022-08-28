@@ -1,0 +1,136 @@
+{
+  "version": "20.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "PDC.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "PDC.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "PDC": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://123456789012/us-east-1",
+      "properties": {
+        "templateFile": "PDC.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::123456789012:role/cdk-hnb659fds-deploy-role-123456789012-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::123456789012:role/cdk-hnb659fds-cfn-exec-role-123456789012-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-123456789012-us-east-1/83958fcc42ea04e36bb76738bf4b8db343e373e875caff1197a0a46a3e2013f6.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "PDC.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::123456789012:role/cdk-hnb659fds-lookup-role-123456789012-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "PDC.assets"
+      ],
+      "metadata": {
+        "/PDC/lambda_role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "lambdarole"
+          }
+        ],
+        "/PDC/sfn_role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "sfnrole"
+          }
+        ],
+        "/PDC/glue_role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "gluerole"
+          }
+        ],
+        "/PDC/PDCGlueconnection": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PDCGlueconnection"
+          }
+        ],
+        "/PDC/ABCONTACT_raw": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ABCONTACTraw"
+          }
+        ],
+        "/PDC/ABCONTACT_processed": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ABCONTACTprocessed"
+          }
+        ],
+        "/PDC/ABCONTACT": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ABCONTACT"
+          }
+        ],
+        "/PDC/ABCONTACT_sfn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ABCONTACTsfn"
+          }
+        ],
+        "/PDC/CLIENT_DETAILS_raw": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CLIENTDETAILSraw"
+          }
+        ],
+        "/PDC/CLIENT_DETAILS_processed": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CLIENTDETAILSprocessed"
+          }
+        ],
+        "/PDC/CLIENT_DETAILS": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CLIENTDETAILS"
+          }
+        ],
+        "/PDC/CLIENT_DETAILS_sfn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CLIENTDETAILSsfn"
+          }
+        ],
+        "/PDC/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/PDC/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/PDC/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "PDC"
+    }
+  }
+}

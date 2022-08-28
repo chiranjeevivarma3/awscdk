@@ -1,0 +1,518 @@
+{
+ "Resources": {
+  "lambdarole": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "ec2.amazonaws.com"
+        ]
+       },
+       "Action": [
+        "sts:AssumeRole"
+       ]
+      }
+     ]
+    },
+    "Description": "description",
+    "ManagedPolicyArns": [
+     "managedPolicyArns"
+    ],
+    "MaxSessionDuration": 123,
+    "Path": "path",
+    "PermissionsBoundary": "permissionsBoundary",
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": "*",
+         "Resource": "*"
+        }
+       ]
+      },
+      "PolicyName": "pdc_lambda_role"
+     }
+    ],
+    "RoleName": "pdc"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/lambda_role"
+   }
+  },
+  "sfnrole": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "ec2.amazonaws.com"
+        ]
+       },
+       "Action": [
+        "sts:AssumeRole"
+       ]
+      }
+     ]
+    },
+    "Description": "description",
+    "ManagedPolicyArns": [
+     "managedPolicyArns"
+    ],
+    "MaxSessionDuration": 123,
+    "Path": "path",
+    "PermissionsBoundary": "permissionsBoundary",
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": "*",
+         "Resource": "*"
+        }
+       ]
+      },
+      "PolicyName": "pdc_sfn_role"
+     }
+    ],
+    "RoleName": "pdc"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/sfn_role"
+   }
+  },
+  "gluerole": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "ec2.amazonaws.com"
+        ]
+       },
+       "Action": [
+        "sts:AssumeRole"
+       ]
+      }
+     ]
+    },
+    "Description": "description",
+    "ManagedPolicyArns": [
+     "managedPolicyArns"
+    ],
+    "MaxSessionDuration": 123,
+    "Path": "path",
+    "PermissionsBoundary": "permissionsBoundary",
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": "*",
+         "Resource": "*"
+        }
+       ]
+      },
+      "PolicyName": "pdc_glue_role"
+     }
+    ],
+    "RoleName": "pdc"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/glue_role"
+   }
+  },
+  "PDCGlueconnection": {
+   "Type": "AWS::Glue::Connection",
+   "Properties": {
+    "CatalogId": "catalogId",
+    "ConnectionInput": {
+     "ConnectionType": "NETWORK",
+     "Description": "VPC network connection",
+     "Name": "PDCGlueconnection",
+     "PhysicalConnectionRequirements": {
+      "AvailabilityZone": "availabilityZone",
+      "SecurityGroupIdList": [
+       "securityGroupIdList"
+      ],
+      "SubnetId": "subnetId"
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/PDCGlueconnection"
+   }
+  },
+  "ABCONTACTraw": {
+   "Type": "AWS::Glue::Job",
+   "Properties": {
+    "Command": {
+     "Name": "glueetl",
+     "PythonVersion": "3.9",
+     "ScriptLocation": "s3://test_raw.py"
+    },
+    "Role": "pdc",
+    "AllocatedCapacity": 1,
+    "Connections": {
+     "Connections": [
+      "PDCGlueconnection"
+     ]
+    },
+    "DefaultArguments": {
+     "--enable-metrics": true,
+     "--enable-continuous-cloudwatch-log": true,
+     "--job-bookmark-option": "job-bookmark-enable"
+    },
+    "Description": "pdc",
+    "ExecutionProperty": {
+     "MaxConcurrentRuns": 123
+    },
+    "GlueVersion": "3.0",
+    "MaxCapacity": 123,
+    "MaxRetries": 123,
+    "Name": "ABCONTACT_raw_pdc",
+    "NotificationProperty": {
+     "NotifyDelayAfter": 123
+    },
+    "NumberOfWorkers": 123,
+    "Tags": {
+     "owner": "chiru",
+     "test": "chiru"
+    },
+    "Timeout": 123,
+    "WorkerType": "workerType"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/ABCONTACT_raw"
+   }
+  },
+  "ABCONTACTprocessed": {
+   "Type": "AWS::Glue::Job",
+   "Properties": {
+    "Command": {
+     "Name": "glueetl",
+     "PythonVersion": "3.9",
+     "ScriptLocation": "s3://test_processed.py"
+    },
+    "Role": "pdc",
+    "AllocatedCapacity": 1,
+    "Connections": {
+     "Connections": []
+    },
+    "DefaultArguments": {
+     "--enable-metrics": true,
+     "--enable-continuous-cloudwatch-log": true,
+     "--job-bookmark-option": "job-bookmark-enable"
+    },
+    "Description": "pdc",
+    "ExecutionProperty": {
+     "MaxConcurrentRuns": 123
+    },
+    "GlueVersion": "3.0",
+    "MaxCapacity": 123,
+    "MaxRetries": 123,
+    "Name": "ABCONTACT_processed_pdc",
+    "NotificationProperty": {
+     "NotifyDelayAfter": 123
+    },
+    "NumberOfWorkers": 123,
+    "Tags": {
+     "owner": "chiru"
+    },
+    "Timeout": 123,
+    "WorkerType": "workerType"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/ABCONTACT_processed"
+   }
+  },
+  "ABCONTACT": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "s3_bucket",
+     "S3Key": "s3_key"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "lambdarole",
+      "Arn"
+     ]
+    },
+    "Architectures": [
+     "architectures"
+    ],
+    "CodeSigningConfigArn": "codeSigningConfigArn",
+    "Description": "description",
+    "Environment": {
+     "Variables": {
+      "variables_key": "variables"
+     }
+    },
+    "FunctionName": "ABCONTACT_pdc",
+    "Handler": "handler",
+    "Layers": [
+     "layers"
+    ],
+    "Runtime": "runtime",
+    "Tags": [
+     {
+      "Key": "c",
+      "Value": "jh"
+     },
+     {
+      "Key": "key",
+      "Value": "value"
+     }
+    ],
+    "Timeout": 123
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/ABCONTACT"
+   }
+  },
+  "ABCONTACTsfn": {
+   "Type": "AWS::StepFunctions::StateMachine",
+   "Properties": {
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "sfnrole",
+      "Arn"
+     ]
+    },
+    "DefinitionString": "definitionString",
+    "DefinitionSubstitutions": {
+     "definition_substitutions_key": {}
+    },
+    "StateMachineName": "ABCONTACT_pdc",
+    "StateMachineType": "STANDARD",
+    "Tags": [
+     {
+      "Key": "key",
+      "Value": "value"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/ABCONTACT_sfn"
+   }
+  },
+  "CLIENTDETAILSraw": {
+   "Type": "AWS::Glue::Job",
+   "Properties": {
+    "Command": {
+     "Name": "glueetl",
+     "PythonVersion": "3.9",
+     "ScriptLocation": "s3://test_raw.py"
+    },
+    "Role": "pdc",
+    "AllocatedCapacity": 1,
+    "Connections": {
+     "Connections": [
+      "PDCGlueconnection"
+     ]
+    },
+    "DefaultArguments": {
+     "--enable-metrics": true,
+     "--enable-continuous-cloudwatch-log": true,
+     "--job-bookmark-option": "job-bookmark-enable"
+    },
+    "Description": "pdc",
+    "ExecutionProperty": {
+     "MaxConcurrentRuns": 123
+    },
+    "GlueVersion": "3.0",
+    "MaxCapacity": 123,
+    "MaxRetries": 123,
+    "Name": "CLIENT_DETAILS_raw_pdc",
+    "NotificationProperty": {
+     "NotifyDelayAfter": 123
+    },
+    "NumberOfWorkers": 123,
+    "Tags": {
+     "owner": "chiru",
+     "test": "chiru"
+    },
+    "Timeout": 123,
+    "WorkerType": "workerType"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/CLIENT_DETAILS_raw"
+   }
+  },
+  "CLIENTDETAILSprocessed": {
+   "Type": "AWS::Glue::Job",
+   "Properties": {
+    "Command": {
+     "Name": "glueetl",
+     "PythonVersion": "3.9",
+     "ScriptLocation": "s3://test_processed.py"
+    },
+    "Role": "pdc",
+    "AllocatedCapacity": 1,
+    "Connections": {
+     "Connections": []
+    },
+    "DefaultArguments": {
+     "--enable-metrics": true,
+     "--enable-continuous-cloudwatch-log": true,
+     "--job-bookmark-option": "job-bookmark-enable"
+    },
+    "Description": "pdc",
+    "ExecutionProperty": {
+     "MaxConcurrentRuns": 123
+    },
+    "GlueVersion": "3.0",
+    "MaxCapacity": 123,
+    "MaxRetries": 123,
+    "Name": "CLIENT_DETAILS_processed_pdc",
+    "NotificationProperty": {
+     "NotifyDelayAfter": 123
+    },
+    "NumberOfWorkers": 123,
+    "Tags": {
+     "owner": "chiru",
+     "test": "chiru"
+    },
+    "Timeout": 123,
+    "WorkerType": "workerType"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/CLIENT_DETAILS_processed"
+   }
+  },
+  "CLIENTDETAILS": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "s3_bucket",
+     "S3Key": "s3_key"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "lambdarole",
+      "Arn"
+     ]
+    },
+    "Architectures": [
+     "architectures"
+    ],
+    "CodeSigningConfigArn": "codeSigningConfigArn",
+    "Description": "description",
+    "Environment": {
+     "Variables": {
+      "variables_key": "variables"
+     }
+    },
+    "FunctionName": "CLIENT_DETAILS_pdc",
+    "Handler": "handler",
+    "Layers": [
+     "layers"
+    ],
+    "Runtime": "runtime",
+    "Tags": [
+     {
+      "Key": "c",
+      "Value": "jh"
+     },
+     {
+      "Key": "key",
+      "Value": "value"
+     }
+    ],
+    "Timeout": 123
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/CLIENT_DETAILS"
+   }
+  },
+  "CLIENTDETAILSsfn": {
+   "Type": "AWS::StepFunctions::StateMachine",
+   "Properties": {
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "sfnrole",
+      "Arn"
+     ]
+    },
+    "DefinitionString": "definitionString",
+    "DefinitionSubstitutions": {
+     "definition_substitutions_key": {}
+    },
+    "StateMachineName": "CLIENT_DETAILS_pdc",
+    "StateMachineType": "STANDARD",
+    "Tags": [
+     {
+      "Key": "key",
+      "Value": "value"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/CLIENT_DETAILS_sfn"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/y2MywqDMBBFv8V9nD5cuRa6KBRK+gFljGOdGidiEkoJ/nsjdnU593WGqoZjgR9fmm4sLbeQHgHNqLL1TIwTNL1oZ0m9bCRImRonQiawE5Xp6tpVWZzaDrfqJcoe+UBz/we/Jfk20A3NwELrttTkXVxMhvs3DE4OFdRwqoq3Zy6XKIEnAr3rD35fiKGoAAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PDC/CDKMetadata/Default"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

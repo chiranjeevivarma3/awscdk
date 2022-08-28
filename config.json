@@ -1,0 +1,166 @@
+{
+    "sol_name": "PDC",
+    "glue_connections" : ["PDCGlueconnection"],
+    "availability_zone":"availabilityZone",
+    "security_group_id_list":["securityGroupIdList"],
+    "subnet_id":"subnetId",
+    "iam_tags":[],
+    "glue_iam":
+    {
+        "assume_role_policy_document":{
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": [
+                            "ec2.amazonaws.com"
+                        ]
+                    },
+                    "Action": [
+                        "sts:AssumeRole"
+                    ]
+                }
+            ]
+        },
+        "policy_document":{
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": "*"
+                }
+            ]
+        }
+    },
+    "lambda_iam":
+    {
+        "assume_role_policy_document":{
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": [
+                            "ec2.amazonaws.com"
+                        ]
+                    },
+                    "Action": [
+                        "sts:AssumeRole"
+                    ]
+                }
+            ]
+        },
+        "policy_document":{
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": "*"
+                }
+            ]
+        }
+    },
+    "sfn_iam":
+    {
+        "assume_role_policy_document":{
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": [
+                            "ec2.amazonaws.com"
+                        ]
+                    },
+                    "Action": [
+                        "sts:AssumeRole"
+                    ]
+                }
+            ]
+        },
+        "policy_document":{
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": "*"
+                }
+            ]
+        }
+    },
+    "jobs": 
+    [
+        {
+            "job_name": "ABCONTACT",
+            "lambda_tags" : {
+                "a": "1", "b": "2", "c": "3"
+            },
+            "lambda_env_vars": {"variables_key": "variables"},
+            "raw_jobs":
+            {
+                "script_location":"s3://test_raw.py",
+                "default_arguments":{
+                    "--enable-metrics": true,
+                    "--enable-continuous-cloudwatch-log": true,
+                    "--job-bookmark-option": "job-bookmark-enable"
+                },
+                "tags": {"owner": "chiru","test": "chiru"},
+                "connections":["PDCGlueconnection"] 
+            },
+            "procesed_jobs": 
+            {
+                "script_location":"s3://test_processed.py",
+                "default_arguments":{
+                    "--enable-metrics": true,
+                    "--enable-continuous-cloudwatch-log": true,
+                    "--job-bookmark-option": "job-bookmark-enable"
+                },
+                "tags": {"owner": "chiru"}
+            },
+            "sfn":
+            {
+                "definition_string":"definitionString",
+                "definition_substitutions":{}
+            }
+        },
+
+        {
+            "job_name": "CLIENT_DETAILS",
+            "lambda_tags" : {
+                "a": "1", "b": "2", "c": "3"
+            },
+            "lambda_env_vars": {"variables_key": "variables"},
+            "raw_jobs": 
+            {
+                "script_location":"s3://test_raw.py",
+                "default_arguments":{
+                    "--enable-metrics": true,
+                    "--enable-continuous-cloudwatch-log": true,
+                    "--job-bookmark-option": "job-bookmark-enable"
+                },
+                "tags": {"owner": "chiru","test": "chiru"},
+                "connections":["PDCGlueconnection"] 
+            },
+            "procesed_jobs": 
+            {
+                "script_location":"s3://test_processed.py",
+                "default_arguments":{
+                    "--enable-metrics": true,
+                    "--enable-continuous-cloudwatch-log": true,
+                    "--job-bookmark-option": "job-bookmark-enable"
+                },
+                "tags": {"owner": "chiru","test": "chiru"}
+            },
+            "sfn":
+            {
+                "definition_string":"definitionString",
+                "definition_substitutions":{}
+            }
+            
+        }
+]
+}
